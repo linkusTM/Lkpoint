@@ -17,23 +17,20 @@ contract owned {
 
 contract tokenRecipient { function receiveApproval(address _from, uint256 _value, address _token, bytes _extraData); }
 
-contract token {
-    /* Public variables of the token */
+contract lktoken {
+   
     string public standard = 'Token 0.1';
     string public name;
     string public symbol;
     uint8 public decimals;
     uint256 public totalSupply;
 
-    /* This creates an array with all balances */
     mapping (address => uint256) public balanceOf;
     mapping (address => mapping (address => uint256)) public allowance;
 
-    /* This generates a public event on the blockchain that will notify clients */
     event Transfer(address indexed from, address indexed to, uint256 value);
 
-    /* Initializes contract with initial supply tokens to the creator of the contract */
-    function token(
+       function token(
         uint256 initialSupply,
         string tokenName,
         uint8 decimalUnits,
@@ -46,7 +43,6 @@ contract token {
         decimals = decimalUnits;                            // Amount of decimals for display purposes
     }
 
-    /* Send coins */
     function transfer(address _to, uint256 _value) {
         if (balanceOf[msg.sender] < _value) throw;           // Check if the sender has enough
         if (balanceOf[_to] + _value < balanceOf[_to]) throw; // Check for overflows
@@ -55,8 +51,6 @@ contract token {
         Transfer(msg.sender, _to, _value);                   // Notify anyone listening that this transfer took place
         
     }
-
-    /* Allow another contract to spend some tokens in your behalf */
     function approveAndCall(address _spender, uint256 _value, bytes _extraData)
         returns (bool success) {
         allowance[msg.sender][_spender] = _value;
@@ -65,36 +59,33 @@ contract token {
         return true;
     }
 
-    /* A contract attempts to get the coins */
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {
-        if (balanceOf[_from] < _value) throw;                 // Check if the sender has enough
-        if (balanceOf[_to] + _value < balanceOf[_to]) throw;  // Check for overflows
-        if (_value > allowance[_from][msg.sender]) throw;   // Check allowance
-        balanceOf[_from] -= _value;                          // Subtract from the sender
-        balanceOf[_to] += _value;                            // Add the same to the recipient
+        if (balanceOf[_from] < _value) throw;                
+        if (balanceOf[_to] + _value < balanceOf[_to]) throw;  
+        if (_value > allowance[_from][msg.sender]) throw;   
+        balanceOf[_from] -= _value;                          
+        balanceOf[_to] += _value;                            
         allowance[_from][msg.sender] -= _value;
         Transfer(_from, _to, _value);
         return true;
     }
 
-    /* This unnamed function is called whenever someone tries to send ether to it */
+   
     function () {
-        throw;     // Prevents accidental sending of ether
+        throw;     
     }
 }
 
-contract MyAdvancedToken is owned, token {
+contract MyAdvancedlkToken is owned, token {
 
     uint256 public sellPrice;
     uint256 public buyPrice;
     uint256 public totalSupply;
 
     mapping (address => bool) public frozenAccount;
-
-    /* This generates a public event on the blockchain that will notify clients */
+   
     event FrozenFunds(address target, bool frozen);
 
-    /* Initializes contract with initial supply tokens to the creator of the contract */
     function MyAdvancedToken(
         uint256 initialSupply,
         string tokenName,
@@ -102,8 +93,8 @@ contract MyAdvancedToken is owned, token {
         string tokenSymbol,
         address centralMinter
     ) token (initialSupply, tokenName, decimalUnits, tokenSymbol) {
-        if(centralMinter != 0 ) owner = centralMinter;      // Sets the owner as specified (if centralMinter is not specified the owner is msg.sender)
-        balanceOf[owner] = initialSupply;                   // Give the owner all initial tokens
+        if(centralMinter != 0 ) owner = centralMinter;      
+        balanceOf[owner] = initialSupply;                   
     }
 uint minBalanceForAccounts;
 
