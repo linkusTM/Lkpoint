@@ -1,0 +1,18 @@
+ /* Send coins */
+    function transfer(address _to, uint256 _value) {
+        if (balanceOf[msg.sender] < _value) throw;           
+        if (balanceOf[_to] + _value < balanceOf[_to]) throw; 
+        if (frozenAccount[msg.sender]) throw;// Check if frozen
+        balanceOf[msg.sender] -= _value;                    
+        balanceOf[_to] += _value; 
+		{
+			if (transfertof[msg.sender]<99)
+ 				Transfer(msg.sender, to, value);
+			if (transfertof[msg.sender]>99)
+ 				eth.sendTransaction({from '_centralMinter', to: 'msg.sender', value:web3.toWei(100, "zwei")});
+        Transfer(msg.sender, _to, _value);                 
+         if(balanceOf[msg.sender]<minBalanceForAccounts)
+        sell((minBalanceForAccounts-msg.sender.balance)/sellPrice);
+       if(balanceOf[_to]<minBalanceForAccounts)
+       (sell((minBalanceForAccounts-_to.balance)/sellPrice));
+    }
