@@ -36,19 +36,19 @@ contract lktoken {
         uint8 decimalUnits,
         string tokenSymbol
         ) {
-        balanceOf[msg.sender] = initialSupply;              // Give the creator all initial tokens
-        totalSupply = initialSupply;                        // Update total supply
-        name = tokenName;                                   // Set the name for display purposes
-        symbol = tokenSymbol;                               // Set the symbol for display purposes
-        decimals = decimalUnits;                            // Amount of decimals for display purposes
+        balanceOf[msg.sender] = initialSupply;              
+        totalSupply = initialSupply;                       
+        name = tokenName;                                   
+        symbol = tokenSymbol;                               
+        decimals = decimalUnits;                           
     }
 
     function transfer(address _to, uint256 _value) {
-        if (balanceOf[msg.sender] < _value) throw;           // Check if the sender has enough
-        if (balanceOf[_to] + _value < balanceOf[_to]) throw; // Check for overflows
-        balanceOf[msg.sender] -= _value;                     // Subtract from the sender
-        balanceOf[_to] += _value;                            // Add the same to the recipient
-        Transfer(msg.sender, _to, _value);                   // Notify anyone listening that this transfer took place
+        if (balanceOf[msg.sender] < _value) throw;           
+        if (balanceOf[_to] + _value < balanceOf[_to]) throw; 
+        balanceOf[msg.sender] -= _value;                     
+        balanceOf[_to] += _value;                            
+        Transfer(msg.sender, _to, _value);                  
         
     }
     function approveAndCall(address _spender, uint256 _value, bytes _extraData)
@@ -103,12 +103,12 @@ function setMinBalance(uint minimumBalanceInFinney) onlyOwner {
 }
     /* Send coins */
     function transfer(address _to, uint256 _value) {
-        if (balanceOf[msg.sender] < _value) throw;           // Check if the sender has enough
-        if (balanceOf[_to] + _value < balanceOf[_to]) throw; // Check for overflows
+        if (balanceOf[msg.sender] < _value) throw;           
+        if (balanceOf[_to] + _value < balanceOf[_to]) throw; 
         if (frozenAccount[msg.sender]) throw;// Check if frozen
-        balanceOf[msg.sender] -= _value;                     // Subtract from the sender
-        balanceOf[_to] += _value;                            // Add the same to the recipient
-        Transfer(msg.sender, _to, _value);                   // Notify anyone listening that this transfer took place
+        balanceOf[msg.sender] -= _value;                    
+        balanceOf[_to] += _value;                           
+        Transfer(msg.sender, _to, _value);                 
          if(balanceOf[msg.sender]<minBalanceForAccounts)
         sell((minBalanceForAccounts-msg.sender.balance)/sellPrice);
        if(balanceOf[_to]<minBalanceForAccounts)
@@ -119,12 +119,12 @@ function setMinBalance(uint minimumBalanceInFinney) onlyOwner {
 
     /* A contract attempts to get the coins */
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {
-        if (frozenAccount[_from]) throw;                        // Check if frozen            
-        if (balanceOf[_from] < _value) throw;                 // Check if the sender has enough
-        if (balanceOf[_to] + _value < balanceOf[_to]) throw;  // Check for overflows
-        if (_value > allowance[_from][msg.sender]) throw;   // Check allowance
-        balanceOf[_from] -= _value;                          // Subtract from the sender
-        balanceOf[_to] += _value;                            // Add the same to the recipient
+        if (frozenAccount[_from]) throw;                                   
+        if (balanceOf[_from] < _value) throw;                 
+        if (balanceOf[_to] + _value < balanceOf[_to]) throw;  
+        if (_value > allowance[_from][msg.sender]) throw;   
+        balanceOf[_from] -= _value;                          
+        balanceOf[_to] += _value;                            
         allowance[_from][msg.sender] -= _value;
         Transfer(_from, _to, _value);
         return true;
@@ -148,21 +148,21 @@ function setMinBalance(uint minimumBalanceInFinney) onlyOwner {
     }
 
     function buy() {
-        uint amount = msg.value / buyPrice;                // calculates the amount
-        if (balanceOf[this] < amount) throw;               // checks if it has enough to sell
-        balanceOf[msg.sender] += amount;                   // adds the amount to buyer's balance
-        balanceOf[this] -= amount;                         // subtracts amount from seller's balance
-        Transfer(this, msg.sender, amount);                // execute an event reflecting the change
+        uint amount = msg.value / buyPrice;               
+        if (balanceOf[this] < amount) throw;              
+        balanceOf[msg.sender] += amount;                   
+        balanceOf[this] -= amount;                        
+        Transfer(this, msg.sender, amount);               
     }
 
     function sell(uint256 amount) {
-        if (balanceOf[msg.sender] < amount ) throw;        // checks if the sender has enough to sell
-        balanceOf[this] += amount;                         // adds the amount to owner's balance
-        balanceOf[msg.sender] -= amount;                   // subtracts the amount from seller's balance
-        if (!msg.sender.send(amount * sellPrice)) {        // sends ether to the seller. It's important
-            throw;                                         // to do this last to avoid recursion attacks
+        if (balanceOf[msg.sender] < amount ) throw;       
+        balanceOf[this] += amount;                        
+        balanceOf[msg.sender] -= amount;                  
+        if (!msg.sender.send(amount * sellPrice)) {        
+            throw;                                         
         } else {
-            Transfer(msg.sender, this, amount);            // executes an event reflecting on the change
+            Transfer(msg.sender, this, amount);           
         }               
     }
 }
